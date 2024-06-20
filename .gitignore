@@ -1,3 +1,7 @@
 steps*.*
 steps01.*
 steps01.md
+
+node_modules
+.env
+
