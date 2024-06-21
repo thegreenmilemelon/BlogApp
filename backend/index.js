@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
@@ -17,6 +18,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/test", (req, res) => {
   res.json({ message: "API is working!" });

@@ -7,12 +7,29 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { useState } from "react";
 
+import { signoutSuccess } from "../redux/user/userSlice";
+
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const path = useLocation().pathname;
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/users/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div>
       <Navbar className="border-b-2">
@@ -65,7 +82,7 @@ const Header = () => {
                 <Dropdown.Item>Profile</Dropdown.Item>
               </Link>
               <Dropdown.Divider />
-              <Dropdown.Item>Sign out</Dropdown.Item>
+              <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
             </Dropdown>
           ) : (
             <Link to="/sign-in">
