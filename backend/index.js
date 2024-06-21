@@ -24,7 +24,7 @@ app.get("/test", (req, res) => {
   res.json({ message: "API is working!" });
 });
 
-app.use("/api/users", userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 
 app.use((error, req, res, next) => {
