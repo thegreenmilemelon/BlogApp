@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import postRouter from "./routes/post.route.js";
+import commentRoutes from "./routes/comment.route.js";
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -28,6 +29,7 @@ app.get("/test", (req, res) => {
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
+app.use("/api/comment", commentRoutes);
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
