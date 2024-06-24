@@ -8,6 +8,8 @@ import authRouter from "./routes/auth.route.js";
 import postRouter from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 
+import path from "path";
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -16,6 +18,8 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -30,6 +34,12 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/post", postRouter);
 app.use("/api/comment", commentRoutes);
+
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/frontend/build/index.html"));
+});
 
 app.use((error, req, res, next) => {
   const statusCode = error.statusCode || 500;
