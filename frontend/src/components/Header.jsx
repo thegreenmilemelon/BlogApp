@@ -1,20 +1,39 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { signoutSuccess } from "../redux/user/userSlice";
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const path = useLocation().pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
   const handleSignout = async () => {
     try {
       const res = await fetch("/api/user/signout", {
@@ -42,7 +61,7 @@ const Header = () => {
           </span>
           <span>Blog</span>
         </Link>
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextInput
             type="text"
             placeholder="Search..."
